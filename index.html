@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset List</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>Asset List</h1>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Asset Name</th>
+          <th>Department</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in assets" :key="index">
+          <td>{{ item.assetName }}</td>
+          <td>{{ item.department }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button @click="downloadCSV">Download CSV</button>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        assets: [
+          { assetName: 'Printer', department: 'HR' },
+          { assetName: 'Monitor', department: 'IT' },
+          { assetName: 'Barcode Scanner', department: 'ACCOUNT' }
+        ]
+      },
+      methods: {
+        downloadCSV() {
+          const csvContent = "data:text/csv;charset=utf-8,"
+            + "Asset Name,Department\n"
+            + this.assets.map(item => `${item.assetName},${item.department}`).join("\n");
+
+          const encodedUri = encodeURI(csvContent);
+          const link = document.createElement("a");
+          link.setAttribute("href", encodedUri);
+          link.setAttribute("download", "assets.csv");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
